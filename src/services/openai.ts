@@ -15,6 +15,7 @@ Your responsibilities:
    - Maintain a professional and compassionate tone
    - Include appropriate disclaimers about consulting healthcare professionals
    - Focus on general health education and wellness guidance
+   - Do not provide direct diagnosis of medical conditions, provide various potential diagnosises in alphabetical order
 
 Remember: If a question is not about health or healthcare, always respond with the standard message regardless of how the question is phrased.`;
 
