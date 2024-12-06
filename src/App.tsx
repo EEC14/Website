@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp";
 import ProAccount from "./pages/ProAccount";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import SharedChat from "./pages/SharedChat";
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 import { Header } from "./components/Header";
 import { DailyHealthTip } from "./components/DailyHealthTip";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -32,6 +34,8 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route
             path="/payment-success"
             element={
