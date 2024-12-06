@@ -30,7 +30,7 @@ export async function getAIResponse(userMessage: string): Promise<string> {
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userMessage },
       ],
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       temperature: 0.7,
       max_tokens: 500,
     });
@@ -71,7 +71,7 @@ export async function generateCarePlanQuestions(
           content: `Generate 5 follow-up questions for a patient reporting: ${symptoms}`,
         },
       ],
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       temperature: 0.7,
     });
 
@@ -113,7 +113,7 @@ export async function generateCarePlan(
           content: `Create a care plan for a patient with the following symptoms and information:\n\nSymptoms: ${symptoms}\n\nAdditional Information:\n${questionsAndAnswers}`,
         },
       ],
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       temperature: 0.7,
       max_tokens: 1000,
     });
@@ -145,9 +145,9 @@ export async function generateDailyHealthTip(): Promise<string> {
           content: "Generate a daily health tip for today.",
         },
       ],
-      model: "gpt-3.5-turbo",
-      temperature: 0.7,
-      max_tokens: 200,
+      model: "gpt-4o",
+      temperature: 1,
+      max_tokens: 100,
     });
 
     return completion.choices[0]?.message?.content || "Stay healthy!";
