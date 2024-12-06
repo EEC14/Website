@@ -78,6 +78,17 @@ const SignUp: React.FC = () => {
               />
             </div>
 
+                        <div className="text-sm text-gray-600">
+              By signing up, you agree to our{' '}
+              <Link to="/terms" className="text-blue-600 hover:text-blue-800">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link to="/privacy" className="text-blue-600 hover:text-blue-800">
+                Privacy Policy
+              </Link>
+            </div>
+            
             <button
               type="submit"
               disabled={isLoading}
