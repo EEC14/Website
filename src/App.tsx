@@ -14,6 +14,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { AuthGuard } from "./components/AuthGuard";
 import { ProGuard } from "./components/ProGuard";
 import { SharedChatsList } from "./pages/Share-chats";
+// import ManageBilling from "./pages/payment-dashboard";
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
               </AuthGuard>
             }
           />
+          {/* <Route
+            path="/payment-dashboard"
+            element={
+              <AuthGuard>
+                <ManageBilling />
+              </AuthGuard>
+            }
+          /> */}
           <Route
             path="/pro"
             element={
