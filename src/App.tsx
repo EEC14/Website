@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Chat from "./pages/Chat";
-import CarePlan from "./pages/CarePlan";
+// import CarePlan from "./pages/CarePlan";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import ProAccount from "./pages/ProAccount";
@@ -12,8 +12,10 @@ import { Header } from "./components/Header";
 import { DailyHealthTip } from "./components/DailyHealthTip";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AuthGuard } from "./components/AuthGuard";
-import { ProGuard } from "./components/ProGuard";
+// import { ProGuard } from "./components/ProGuard";
 import { SharedChatsList } from "./pages/Share-chats";
+import CarePlan from "./pages/generatorpage";
+import { DeluxeGuard } from "./components/DeluxeGuard";
 // import ManageBilling from "./pages/payment-dashboard";
 
 function App() {
@@ -69,13 +71,23 @@ function App() {
               </AuthGuard>
             }
           />
-          <Route
+          {/* <Route
             path="/care-plan"
             element={
               <AuthGuard>
                 <ProGuard>
                   <CarePlan />
                 </ProGuard>
+              </AuthGuard>
+            }
+          /> */}
+          <Route
+            path="/plan"
+            element={
+              <AuthGuard>
+                <DeluxeGuard>
+                  <CarePlan />
+                </DeluxeGuard>
               </AuthGuard>
             }
           />

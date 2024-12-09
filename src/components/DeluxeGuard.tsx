@@ -4,11 +4,11 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 // import { Loader2 } from "lucide-react";
 
-interface ProGuardProps {
+interface DeluxeGuardProps {
   children: React.ReactNode;
 }
 
-export const ProGuard: React.FC<ProGuardProps> = ({ children }) => {
+export const DeluxeGuard: React.FC<DeluxeGuardProps> = ({ children }) => {
   const { user } = useAuth();
   // const { isPro, isLoading, error } = useProStatus(user);
 
@@ -31,7 +31,7 @@ export const ProGuard: React.FC<ProGuardProps> = ({ children }) => {
   //   );
   // }
 
-  if (!user?.isPro) {
+  if (!user?.isDeluxe) {
     return <Navigate to="/pro" replace />;
   }
 
