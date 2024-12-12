@@ -35,7 +35,7 @@ function selectOpenAIModel(user: UserProfile | null): string {
   return DEFAULT_MODEL;
 }
 
-export async function getAIResponse(userMessage: string): Promise<string> {
+export async function getAIResponse(userMessage: string, user: UserProfile): Promise<string> {
   if (!import.meta.env.VITE_OPENAI_API_KEY) {
     throw new Error("OpenAI API key is not configured");
   }
