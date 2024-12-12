@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { UserProfile } from "../services/firebase/firestore";
-
+import { useAuth } from "../contexts/AuthContext";
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
