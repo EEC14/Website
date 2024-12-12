@@ -11,7 +11,7 @@ export const DailyHealthTip: React.FC = () => {
 
   useEffect(() => {
     const fetchTip = async () => {
-      if (!(user?.isPro || user?.isDeluxe) {
+      if (!(user?.isPro || user?.isDeluxe)) {
         setIsLoading(false);
         return;
       }
@@ -40,7 +40,7 @@ export const DailyHealthTip: React.FC = () => {
     fetchTip();
   }, [user?.isPro]);
 
-  if (!(user?.isPro || user?.isDeluxe) {
+  if (!(user?.isPro || user?.isDeluxe)) {
     return (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-blue-100">
         <div className="flex items-start space-x-2 sm:space-x-3">
