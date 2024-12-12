@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
                            hover:from-blue-800 hover:to-blue-700 transition-colors duration-200 shadow-sm"
                   >
                     <WorkflowIcon className="w-4 h-4" />
-                    <span className="text-sm underline">Plan</span>
+                    <span className="text-sm underline">Plan generator</span>
                   </Link>
                 )}
 
@@ -97,7 +97,7 @@ export const Header: React.FC = () => {
                   >
                     <Crown className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span className="text-sm font-medium sm:text-base">
-                      Mange Plan
+                      Manage Plan
                     </span>
                   </button>
                 ) : (
