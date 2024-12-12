@@ -155,7 +155,7 @@ export async function generateDailyHealthTip(): Promise<string> {
         {
           role: "system",
           content:
-            "You are a health and wellness expert. Provide a concise, practical daily health tip focusing on one key aspect of healthy living. Include a brief explanation of why it's important.",
+            "You are a health and wellness expert. Provide a concise, practical daily health tip focusing on one key aspect of healthy living. Include a brief explanation of maximum one phrase of why it's important.",
         },
         {
           role: "user",
