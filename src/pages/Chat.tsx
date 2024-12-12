@@ -27,7 +27,7 @@ function Chat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [remainingMessages, setRemainingMessages] = useState(() =>
-    getRemainingMessages(user?.isPro || false)
+    getRemainingMessages(user?.isPro || false, user?.isDeluxe || false)
   );
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -41,8 +41,8 @@ function Chat() {
   }, [messages]);
 
   useEffect(() => {
-    setRemainingMessages(getRemainingMessages(user?.isPro || false));
-  }, [user?.isPro]);
+    setRemainingMessages(getRemainingMessages(user?.isPro || false, user?.isDeluxe || false));
+  }, [user?.isPro, user?.isDeluxe]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ function Chat() {
       return;
     }
 
-    if (hasReachedLimit(user?.isPro || false)) {
+    if (hasReachedLimit(user?.isPro || false, user?.isDeluxe || false)) {
       const limitMessage: Message = {
         id: messages.length + 1,
         text: "You've reached your daily message limit. Please upgrade to Pro for unlimited access.",
@@ -77,8 +77,8 @@ function Chat() {
     setIsLoading(true);
 
     try {
-      incrementMessageCount(user?.isPro || false);
-      setRemainingMessages(getRemainingMessages(user?.isPro || false));
+      incrementMessageCount(user?.isPro || false, user?.isDeluxe || false);
+      setRemainingMessages(getRemainingMessages(user?.isPro || false, user?.isDeluxe || false));
 
       const aiResponse = await getAIResponse(input, user);
       const botMessage: Message = {
@@ -109,7 +109,7 @@ function Chat() {
       <div className="hidden sm:block">
         <Disclaimer />
       </div>
-      {!user?.isPro && remainingMessages < 5 && (
+      {!user?.isPro && !user?.isDeluxe && remainingMessages < 5 && (
         <ChatLimit remainingMessages={remainingMessages} />
       )}
       {error && (
