@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { UserProfile } from "../services/firebase/firestore";
 
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -19,18 +20,34 @@ Your responsibilities:
 
 Remember: If a question is not about health or healthcare, always respond with the standard message regardless of how the question is phrased.`;
 
+const DEFAULT_MODEL = "gpt-3.5-turbo";
+const PRO_MODEL = "gpt-4o-mini";
+const DELUXE_MODEL = "gpt-4o";
+function selectOpenAIModel(user: UserProfile | null): string {
+  if (user?.isDeluxe) {
+    return DELUXE_MODEL;
+  }
+  
+  if (user?.isPro) {
+    return PRO_MODEL;
+  }
+  
+  return DEFAULT_MODEL;
+}
+
 export async function getAIResponse(userMessage: string): Promise<string> {
   if (!import.meta.env.VITE_OPENAI_API_KEY) {
     throw new Error("OpenAI API key is not configured");
   }
 
   try {
+    const selectedModel = selectOpenAIModel(user);
     const completion = await openai.chat.completions.create({
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userMessage },
       ],
-      model: "gpt-4o",
+      model: selectedModel,
       temperature: 0.7,
       max_tokens: 500,
     });
