@@ -80,7 +80,7 @@ function Chat() {
       incrementMessageCount(user?.isPro || false);
       setRemainingMessages(getRemainingMessages(user?.isPro || false));
 
-      const aiResponse = await getAIResponse(input);
+      const aiResponse = await getAIResponse(input, user);
       const botMessage: Message = {
         id: messages.length + 2,
         text: aiResponse,
