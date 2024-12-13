@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
                        bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl
                        hover:from-blue-800 hover:to-blue-700 transition-colors duration-200 shadow-sm"
           >
-            esbhealthcare.com
+            Our website
           </a>
         </div>
       </div>
