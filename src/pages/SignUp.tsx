@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,6 +15,11 @@ const SignUp: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
+
+    if (!acceptTerms) {
+      setError('You must accept the Terms of Service and Privacy Policy to proceed.');
+      return;
+    }
 
     setError('');
     setIsLoading(true);
@@ -78,17 +84,27 @@ const SignUp: React.FC = () => {
               />
             </div>
 
-                        <div className="text-sm text-gray-600">
-              By signing up, you agree to our{' '}
-              <Link to="/terms" className="text-blue-600 hover:text-blue-800">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link to="/privacy" className="text-blue-600 hover:text-blue-800">
-                Privacy Policy
-              </Link>
+            <div className="flex items-start">
+              <input
+                id="acceptTerms"
+                type="checkbox"
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                required
+              />
+              <label htmlFor="acceptTerms" className="ml-2 text-sm text-gray-600">
+                I agree to the{' '}
+                <Link to="/terms" className="text-blue-600 hover:text-blue-800">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link to="/privacy" className="text-blue-600 hover:text-blue-800">
+                  Privacy Policy
+                </Link>.
+              </label>
             </div>
-            
+
             <button
               type="submit"
               disabled={isLoading}
