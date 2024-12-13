@@ -16,12 +16,13 @@ import { AuthGuard } from "./components/AuthGuard";
 import { SharedChatsList } from "./pages/Share-chats";
 import CarePlan from "./pages/generatorpage";
 import { DeluxeGuard } from "./components/DeluxeGuard";
+import Footer from "./components/Footer";
 // import ManageBilling from "./pages/payment-dashboard";
 
 function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
         <Header />
         <div className="max-w-4xl px-4 py-4 mx-auto">
           <DailyHealthTip />
@@ -93,6 +94,7 @@ function App() {
           />
           <Route path="/shared/:shareId" element={<SharedChat />} />
         </Routes>
+        <Footer />
       </div>
     </AuthProvider>
   );
