@@ -8,9 +8,34 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { signup } = useAuth();
+
+  const validatePassword = (password: string): boolean => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const isLongEnough = password.length >= 6;
+
+    let errorMessage = '';
+    if (!isLongEnough) {
+      errorMessage = 'Password must be at least 6 characters long';
+    } else if (!hasUpperCase) {
+      errorMessage = 'Password must contain at least one uppercase letter';
+    } else if (!hasLowerCase) {
+      errorMessage = 'Password must contain at least one lowercase letter';
+    } else if (!hasNumber) {
+      errorMessage = 'Password must contain at least one number';
+    } else if (!hasSpecialChar) {
+      errorMessage = 'Password must contain at least one special character';
+    }
+
+    setPasswordError(errorMessage);
+    return errorMessage === '';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +43,10 @@ const SignUp: React.FC = () => {
 
     if (!acceptTerms) {
       setError('You must accept the Terms of Service and Privacy Policy to proceed.');
+      return;
+    }
+
+    if (!validatePassword(password)) {
       return;
     }
 
@@ -77,11 +106,21 @@ const SignUp: React.FC = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  validatePassword(e.target.value);
+                }}
                 className="w-full px-4 py-3 rounded-xl border border-gray-300 
                          focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 required
               />
+              {passwordError && (
+                <p className="mt-2 text-sm text-red-600">{passwordError}</p>
+              )}
+              <p className="mt-2 text-sm text-gray-500">
+                Password must be at least 6 characters long and contain at least one uppercase letter, 
+                one lowercase letter, one number, and one special character.
+              </p>
             </div>
 
             <div className="flex items-start">
