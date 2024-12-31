@@ -1,7 +1,7 @@
 export const Plans = {
   Pro: {
-    link: "https://buy.stripe.com/test_fZeaGr7qd2Ac6Dm8ww",
-    priceId: "price_1QQ7K2GuEHc4ZQvQ0nDFn6HL", // Replace with your actual Stripe Price ID
+    link: "https://buy.stripe.com/3cs28u65A0784RWcMO",
+    priceId: "price_1QWgd9GuEHc4ZQvQOh8Q6zzg", // Replace with your actual Stripe Price ID
     name: "Pro",
     price: 30,
     features: [
@@ -12,9 +12,9 @@ export const Plans = {
     ],
   },
   Deluxe: {
-    link: " https://buy.stripe.com/test_7sIcOz8uh0s43ra5km",
+    link: " https://buy.stripe.com/fZe7sOalQ4no5W0dQR",
     priceId:
-      "price_1QTm7zGuEHc4ZQvQhrkqDkrQ" /*  "price_1QTmypGuEHc4ZQvQVFmxQ9Ti" */, // Replace with your actual Stripe Price ID
+      "price_1QWgaIGuEHc4ZQvQUozEauwS" /*  "price_1QTmypGuEHc4ZQvQVFmxQ9Ti" */, // Replace with your actual Stripe Price ID
     name: "Deluxe",
     price: 45,
     features: [
