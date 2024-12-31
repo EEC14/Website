@@ -21,7 +21,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({ link, text }) => {
   );
 };
 
-const App = () => {
+export const BetaTesting = () => {
   return (
     <div className="flex justify-center items-center h-screen">
         <div>
