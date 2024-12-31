@@ -41,7 +41,14 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/betatest" element={<BetaTesting />} />
+          <Route
+            path="/beta-test"
+            element={
+              <AuthGuard>
+                <BetaTesting />
+              </AuthGuard>
+            }
+          />
           <Route
             path="/payment-success"
             element={
