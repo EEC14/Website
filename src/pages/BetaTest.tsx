@@ -31,7 +31,7 @@ export const BetaTesting = () => {
       </div>
       <div className="flex gap-6">
         <LinkButton 
-          link="https://www.example.com" 
+          link="https://play.google.com/store/apps/details?id=com.healthchatdev.HealthChat" 
           text="Android"
         />
         <LinkButton 
