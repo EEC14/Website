@@ -18,6 +18,7 @@ import CarePlan from "./pages/generatorpage";
 import { DeluxeGuard } from "./components/DeluxeGuard";
 import Footer from "./components/Footer";
 // import ManageBilling from "./pages/payment-dashboard";
+import BetaTesting from "./pages/BetaTest";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/betatest" element={<BetaTesting />} />
           <Route
             path="/payment-success"
             element={
