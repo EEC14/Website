@@ -72,7 +72,10 @@ export const Header: React.FC = () => {
                   className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 sm:py-2.5 
                            bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl
                            hover:from-blue-800 hover:to-blue-700 transition-colors duration-200 shadow-sm"
-                ></Link>
+                >
+                  <Share className="w-4 h-4" />
+                  <span className="text-sm underline">App Download</span>
+                </Link>
                 <Link
                   to="/share-chats"
                   className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 sm:py-2.5 
