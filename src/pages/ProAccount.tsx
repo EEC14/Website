@@ -53,8 +53,7 @@ const ProAccount: React.FC = () => {
                   Manage Your Plan
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Easily upgrade, downgrade, or cancel your subscription. Track
-                  all your invoices and download them as PDFs.
+                  Easily upgrade, downgrade, or cancel your subscription. If you subscribed in the application , please modify your subscription there.
                 </p>
               </div>
             </div>
