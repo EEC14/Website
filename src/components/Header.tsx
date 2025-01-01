@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
       window.location.href = data.url;
     } catch (error) {
       console.error("There was an error!", error);
-      alert("Failed to redirect to the billing portal.");
+      alert("Failed to redirect to the billing portal. If you subscribed in the application, please modify your subscription there.");
     }
   };
 
