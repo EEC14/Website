@@ -7,9 +7,9 @@ const openai = new OpenAI({
 });
 
 const PLAN_PROMPTS = {
-  workout: "You are a certified fitness trainer. Generate 5 relevant questions to create a personalized workout plan. Questions should cover fitness level, schedule, equipment access, and any limitations.",
-  diet: "You are a certified nutritionist. Generate 5 relevant questions to create a personalized diet plan. Questions should cover dietary preferences, restrictions, current eating habits, and lifestyle.",
-  meditation: "You are a meditation instructor. Generate 5 relevant questions to create a personalized meditation plan. Questions should cover experience level, schedule, practice goals, preferred techniques, and any specific challenges."
+  workout: "You are a certified fitness trainer. Generate 5 relevant questions to create a personalized workout plan. Questions should cover fitness level, schedule, equipment access, and any limitations.DO NOT put examples in questions and end every question with a question mark.",
+  diet: "You are a certified nutritionist. Generate 5 relevant questions to create a personalized diet plan. Questions should cover dietary preferences, restrictions, current eating habits, and lifestyle.DO NOT put examples in questions and end every question with a question mark.",
+  meditation: "You are a meditation instructor. Generate 5 relevant questions to create a personalized meditation plan. Questions should cover experience level, schedule, practice goals, preferred techniques, and any specific challenges.DO NOT put examples in questions and end every question with a question mark."
 };
 
 const PLAN_GENERATION_PROMPTS = {
@@ -34,7 +34,6 @@ export async function generatePlanQuestions(
       ],
       model: "chatgpt-4o-latest",
       temperature: 0.7,
-      max_tokens: 2500,
     });
 
     return completion.choices[0]?.message?.content
