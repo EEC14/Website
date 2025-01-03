@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, User, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { Crown } from 'lucide-react';
 
 interface UserData {
   isPro: boolean;
   isDeluxe: boolean;
+  stripeCustomerId?: string;
 }
 
 export const ProfilePage: React.FC = () => {
@@ -14,6 +16,7 @@ export const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const auth = getAuth();
   const db = getFirestore();
@@ -51,7 +54,8 @@ export const ProfilePage: React.FC = () => {
       setLoading(false);
     }
   };
-    const handleManageBilling = async () => {
+
+  const handleManageBilling = async () => {
     try {
       const response = await fetch("/.netlify/functions/billingportal", {
         method: "POST",
@@ -59,7 +63,7 @@ export const ProfilePage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          customerId: user?.stripeCustomerId,
+          customerId: userData?.stripeCustomerId,
         }),
       });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -69,6 +73,7 @@ export const ProfilePage: React.FC = () => {
       console.error("There was an error!", error);
       alert("Failed to redirect to the billing portal. If you subscribed in the application, please modify your subscription there.");
     }
+  };
 
   if (!user) {
     return (
@@ -116,8 +121,9 @@ export const ProfilePage: React.FC = () => {
             {loading ? 'Sending verification...' : 'Update Email'}
           </button>
         </form>
-        <div>
-        {user.isPro || user.isDeluxe ? (
+
+        <div className="mt-4">
+          {(userData?.isPro || userData?.isDeluxe) && (
             <button
               onClick={() => {
                 handleManageBilling();
@@ -128,10 +134,9 @@ export const ProfilePage: React.FC = () => {
               <Crown className="w-4 h-4" />
               <span className="text-sm">Update the billing email</span>
             </button>
-          ) : (
-            <p></p>
           )}
         </div>
+
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">Subscription Status</h2>
           <div className="space-y-2">
