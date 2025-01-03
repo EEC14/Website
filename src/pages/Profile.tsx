@@ -35,9 +35,16 @@ const ProfilePage: React.FC = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data() as UserData;
           setSubscription(userData.subscription);
-          if (userData.stripeCustomerId && user.email !== newEmail) {
+          
+          const currentEmail = user.email || '';
+          const previousEmail = localStorage.getItem('previousEmail');
+          
+          // Only update Stripe if we detect an email change
+          if (userData.stripeCustomerId && previousEmail && currentEmail !== previousEmail) {
             try {
-              await updateStripeEmail(user.email || '', userData.stripeCustomerId);
+              console.log('Updating Stripe email:', { currentEmail, previousEmail });
+              await updateStripeEmail(currentEmail, userData.stripeCustomerId);
+              localStorage.removeItem('previousEmail');
             } catch (err) {
               console.error('Failed to update Stripe email:', err);
             }
@@ -74,6 +81,7 @@ const ProfilePage: React.FC = () => {
 
     try {
       if (auth.currentUser) {
+        localStorage.setItem('previousEmail', auth.currentUser.email || '');
         await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
         setSuccess('Verification email sent. Please check your inbox and click the verification link.');
       }
