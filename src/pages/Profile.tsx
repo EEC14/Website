@@ -129,6 +129,7 @@ const ProfilePage: React.FC = () => {
               <span className="text-sm">Update the billing email</span>
             </button>
           ) : (
+            <p></p>
           )}
         </div>
         <div className="mt-8">
