@@ -24,6 +24,14 @@ const Footer: React.FC = () => {
           >
             Our website
           </a>
+          <a 
+            href="https://esb-healthcare.gitbook.io/healthchat-patient/" 
+            className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 sm:py-2.5 
+                       bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl
+                       hover:from-blue-800 hover:to-blue-700 transition-colors duration-200 shadow-sm"
+          >
+            Docs
+          </a>
         </div>
       </div>
     </footer>
