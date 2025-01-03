@@ -54,14 +54,6 @@ export const Header: React.FC = () => {
             <Share className="w-4 h-4" />
             <span className="text-sm">Shared Chats</span>
           </Link>
-          <Link
-            to="/profile"
-            onClick={() => setIsMenuOpen(false)}
-            className="flex items-center space-x-1.5 w-full px-3 py-2 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl hover:from-blue-800 hover:to-blue-700"
-          >
-            <Share className="w-4 h-4" />
-            <span className="text-sm">Manage Profile</span>
-          </Link>
           {user.isDeluxe && (
             <Link
               to="/plan"
@@ -72,6 +64,14 @@ export const Header: React.FC = () => {
               <span className="text-sm">Plan generator</span>
             </Link>
           )}
+          <Link
+            to="/profile"
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center space-x-1.5 w-full px-3 py-2 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl hover:from-blue-800 hover:to-blue-700"
+          >
+            <Share className="w-4 h-4" />
+            <span className="text-sm">Manage Profile</span>
+          </Link>
           {user.isPro || user.isDeluxe ? (
             <button
               onClick={() => {
