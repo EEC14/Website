@@ -9,7 +9,8 @@ import {
   Share,
   WorkflowIcon,
   Menu,
-  X
+  X,
+  UserPen
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -54,13 +55,21 @@ export const Header: React.FC = () => {
             <Share className="w-4 h-4" />
             <span className="text-sm">Shared Chats</span>
           </Link>
+          <Link
+            to="/profile"
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center space-x-1.5 w-full px-3 py-2 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl hover:from-blue-800 hover:to-blue-700"
+          >
+            <Share className="w-4 h-4" />
+            <span className="text-sm">Manage your profile</span>
+          </Link>
           {user.isDeluxe && (
             <Link
               to="/plan"
               onClick={() => setIsMenuOpen(false)}
               className="flex items-center space-x-1.5 w-full px-3 py-2 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl hover:from-blue-800 hover:to-blue-700"
             >
-              <WorkflowIcon className="w-4 h-4" />
+              <UserPen className="w-4 h-4" />
               <span className="text-sm">Plan generator</span>
             </Link>
           )}
