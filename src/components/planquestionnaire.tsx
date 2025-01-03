@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { generatePlanQuestions, generatePlan } from '../services/planGenerator';
 
-export type PlanType = 'workout' | 'diet';
+export type PlanType = 'workout' | 'diet' | 'meditation';
 
 interface PlanQuestionnaireProps {
   type: PlanType;
@@ -17,6 +17,10 @@ export const PlanQuestionnaire: React.FC<PlanQuestionnaireProps> = ({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [goals, setGoals] = useState('');
+
+  const goalLabel = type === 'workout' ? 'fitness' : 
+                   type === 'diet' ? 'dietary' : 
+                   'meditation';
 
   const handleGoalsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,14 +59,14 @@ export const PlanQuestionnaire: React.FC<PlanQuestionnaireProps> = ({
       <form onSubmit={handleGoalsSubmit} className="space-y-4">
         <div>
           <label htmlFor="goals" className="block text-sm font-medium text-gray-700 mb-2">
-            What are your {type === 'workout' ? 'fitness' : 'dietary'} goals?
+            What are your {goalLabel} goals?
           </label>
           <textarea
             id="goals"
             value={goals}
             onChange={(e) => setGoals(e.target.value)}
             className="w-full h-32 px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder={`Please describe your ${type === 'workout' ? 'fitness' : 'dietary'} goals and preferences...`}
+            placeholder={`Please describe your ${goalLabel} goals and preferences...`}
           />
         </div>
         <button
@@ -116,7 +120,9 @@ export const PlanQuestionnaire: React.FC<PlanQuestionnaireProps> = ({
             <span>Generating {type} plan...</span>
           </>
         ) : (
-          <span>Generate {type === 'workout' ? 'Workout' : 'Diet'} Plan</span>
+          <span>Generate {type === 'workout' ? 'Workout' : 
+                         type === 'diet' ? 'Diet' : 
+                         'Meditation'} Plan</span>
         )}
       </button>
     </form>

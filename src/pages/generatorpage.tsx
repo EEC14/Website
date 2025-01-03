@@ -75,6 +75,24 @@ const CarePlan: React.FC = () => {
                   </div>
                   <ArrowRight className="w-5 h-5 ml-auto text-gray-400 group-hover:text-green-500" />
                 </button>
+                <button
+                  onClick={() => {
+                    setPlanType("meditation");
+                    setStep("questionnaire");
+                  }}
+                  className="flex items-center p-6 transition-colors duration-200 border-2 border-gray-200 rounded-xl hover:border-blue-500 group"
+                >
+                  <div className="p-3 transition-colors duration-200 bg-green-100 rounded-lg group-hover:bg-green-200">
+                    <Utensils className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="ml-4 text-left">
+                    <h3 className="font-semibold text-gray-900">Diet Plan</h3>
+                    <p className="text-sm text-gray-600">
+                      Get a personalized meditation plan
+                    </p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 ml-auto text-gray-400 group-hover:text-green-500" />
+                </button>
               </div>
             </div>
           )}
