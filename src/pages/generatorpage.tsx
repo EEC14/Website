@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertTriangle, Dumbbell, Utensils, ArrowRight } from "lucide-react";
+import { AlertTriangle, Dumbbell, Utensils, ArrowRight, Flower } from "lucide-react";
 import { PlanQuestionnaire, PlanType } from "../components/planquestionnaire";
 import { PlanResult } from "../components/planresults";
 
@@ -83,7 +83,7 @@ const CarePlan: React.FC = () => {
                   className="flex items-center p-6 transition-colors duration-200 border-2 border-gray-200 rounded-xl hover:border-blue-500 group"
                 >
                   <div className="p-3 transition-colors duration-200 bg-green-100 rounded-lg group-hover:bg-green-200">
-                    <Utensils className="w-6 h-6 text-green-600" />
+                    <Flower className="w-6 h-6 text-green-600" />
                   </div>
                   <div className="ml-4 text-left">
                     <h3 className="font-semibold text-gray-900">Meditation Plan</h3>
