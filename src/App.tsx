@@ -19,7 +19,7 @@ import { DeluxeGuard } from "./components/DeluxeGuard";
 import Footer from "./components/Footer";
 // import ManageBilling from "./pages/payment-dashboard";
 import BetaTesting from "./pages/BetaTest";
-
+import ProfilePage from "./pages/Profile";
 function App() {
   return (
     <AuthProvider>
@@ -46,6 +46,14 @@ function App() {
             element={
               <AuthGuard>
                 <BetaTesting />
+              </AuthGuard>
+            }
+          />
+                    <Route
+            path="/profile"
+            element={
+              <AuthGuard>
+                <ProfilePage />
               </AuthGuard>
             }
           />
