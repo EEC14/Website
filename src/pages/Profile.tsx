@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, updateEmail, User, sendEmailVerification, verifyBeforeUpdateEmail } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 interface Subscription {
@@ -21,54 +21,43 @@ const ProfilePage: React.FC = () => {
   const [success, setSuccess] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [stripeCustomerId, setStripeCustomerId] = useState<string>('');
-  const [verificationSent, setVerificationSent] = useState<boolean>(false);
 
   const auth = getAuth();
   const db = getFirestore();
 
   useEffect(() => {
-    const fetchUserData = async (): Promise<void> => {
-      if (auth.currentUser) {
-        setUser(auth.currentUser);
-        setNewEmail(auth.currentUser.email || '');
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUser(user);
+        setNewEmail(user.email || '');
 
-        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data() as UserData;
           setSubscription(userData.subscription);
-          setStripeCustomerId(userData.stripeCustomerId || '');
+          if (userData.stripeCustomerId && user.email !== newEmail) {
+            try {
+              await updateStripeEmail(user.email || '', userData.stripeCustomerId);
+            } catch (err) {
+              console.error('Failed to update Stripe email:', err);
+            }
+          }
         }
       }
-    };
+    });
 
-    fetchUserData();
-  }, [auth.currentUser]);
+    return () => unsubscribe();
+  }, []);
 
-  useEffect(() => {
-    const handleVerificationComplete = async () => {
-      if (user?.emailVerified && stripeCustomerId && verificationSent) {
-        try {
-          await updateStripeEmail(newEmail, stripeCustomerId);
-          setSuccess('Email updated successfully');
-          setVerificationSent(false);
-        } catch (err) {
-          setError('Failed to update Stripe email');
-        }
-      }
-    };
-
-    handleVerificationComplete();
-  }, [user?.emailVerified]);
-
-  const updateStripeEmail = async (newEmail: string, customerId: string): Promise<void> => {
+  const updateStripeEmail = async (email: string, customerId: string): Promise<void> => {
     const response = await fetch('/.netlify/functions/update-stripe-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: newEmail,
-        customerId: customerId
+        email,
+        customerId
       })
     });
 
@@ -86,8 +75,7 @@ const ProfilePage: React.FC = () => {
     try {
       if (auth.currentUser) {
         await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
-        setVerificationSent(true);
-        setSuccess('Verification email sent. Please check your inbox and verify the new email address.');
+        setSuccess('Verification email sent. Please check your inbox and click the verification link.');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -126,7 +114,7 @@ const ProfilePage: React.FC = () => {
               Email Address
             </label>
             <input
-              type="email"
+              type="email" 
               value={newEmail}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewEmail(e.target.value)}
               required
@@ -136,10 +124,10 @@ const ProfilePage: React.FC = () => {
 
           <button
             type="submit"
-            disabled={loading || verificationSent}
+            disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Sending verification...' : verificationSent ? 'Verification email sent' : 'Update Email'}
+            {loading ? 'Sending verification...' : 'Update Email'}
           </button>
         </form>
 
