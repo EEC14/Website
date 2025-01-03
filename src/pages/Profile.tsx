@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, updateEmail, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 interface Subscription {
   plan: string;
@@ -10,6 +10,7 @@ interface Subscription {
 
 interface UserData {
   subscription: Subscription | null;
+  stripeCustomerId?: string;
 }
 
 const ProfilePage: React.FC = () => {
@@ -19,6 +20,7 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [stripeCustomerId, setStripeCustomerId] = useState<string>('');
 
   const auth = getAuth();
   const db = getFirestore();
@@ -32,13 +34,31 @@ const ProfilePage: React.FC = () => {
         const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data() as UserData;
-          setSubscription(userData.isPro || userData.isDeluxe ? userData.subscription : null);
+          setSubscription(userData.isDeluxe == True || userData.isPro == True ? userData.subscription : null);
+          setStripeCustomerId(userData.stripeCustomerId || '');
         }
       }
     };
 
     fetchUserData();
   }, [auth.currentUser]);
+
+  const updateStripeEmail = async (newEmail: string, customerId: string): Promise<void> => {
+    const response = await fetch('/.netlify/functions/update-stripe-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: newEmail,
+        customerId: customerId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update Stripe email');
+    }
+  };
 
   const handleEmailUpdate = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -48,7 +68,14 @@ const ProfilePage: React.FC = () => {
 
     try {
       if (auth.currentUser) {
+        // Update Firebase Auth email
         await updateEmail(auth.currentUser, newEmail);
+
+        // Update Stripe customer email if stripeCustomerId exists
+        if (stripeCustomerId) {
+          await updateStripeEmail(newEmail, stripeCustomerId);
+        }
+
         setSuccess('Email updated successfully');
       }
     } catch (err) {
