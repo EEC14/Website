@@ -60,7 +60,7 @@ export const Header: React.FC = () => {
             className="flex items-center space-x-1.5 w-full px-3 py-2 bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-xl hover:from-blue-800 hover:to-blue-700"
           >
             <Share className="w-4 h-4" />
-            <span className="text-sm">Manage your profile</span>
+            <span className="text-sm">Profile</span>
           </Link>
           {user.isDeluxe && (
             <Link
