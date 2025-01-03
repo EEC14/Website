@@ -7,7 +7,7 @@ interface UserData {
   isDeluxe: boolean;
 }
 
-const ProfilePage: React.FC = () => {
+export const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [newEmail, setNewEmail] = useState<string>('');
@@ -144,5 +144,3 @@ const ProfilePage: React.FC = () => {
     </div>
   );
 };
-
-export default ProfilePage;
