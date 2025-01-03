@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, updateEmail, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getAuth, updateEmail, User, sendEmailVerification, verifyBeforeUpdateEmail } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 interface Subscription {
   plan: string;
@@ -21,6 +21,7 @@ const ProfilePage: React.FC = () => {
   const [success, setSuccess] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [stripeCustomerId, setStripeCustomerId] = useState<string>('');
+  const [verificationSent, setVerificationSent] = useState<boolean>(false);
 
   const auth = getAuth();
   const db = getFirestore();
@@ -34,7 +35,7 @@ const ProfilePage: React.FC = () => {
         const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data() as UserData;
-          setSubscription(userData.isDeluxe == True || userData.isPro == True ? userData.subscription : null);
+          setSubscription(userData.subscription);
           setStripeCustomerId(userData.stripeCustomerId || '');
         }
       }
@@ -42,6 +43,22 @@ const ProfilePage: React.FC = () => {
 
     fetchUserData();
   }, [auth.currentUser]);
+
+  useEffect(() => {
+    const handleVerificationComplete = async () => {
+      if (user?.emailVerified && stripeCustomerId && verificationSent) {
+        try {
+          await updateStripeEmail(newEmail, stripeCustomerId);
+          setSuccess('Email updated successfully');
+          setVerificationSent(false);
+        } catch (err) {
+          setError('Failed to update Stripe email');
+        }
+      }
+    };
+
+    handleVerificationComplete();
+  }, [user?.emailVerified]);
 
   const updateStripeEmail = async (newEmail: string, customerId: string): Promise<void> => {
     const response = await fetch('/.netlify/functions/update-stripe-email', {
@@ -68,15 +85,9 @@ const ProfilePage: React.FC = () => {
 
     try {
       if (auth.currentUser) {
-        // Update Firebase Auth email
-        await updateEmail(auth.currentUser, newEmail);
-
-        // Update Stripe customer email if stripeCustomerId exists
-        if (stripeCustomerId) {
-          await updateStripeEmail(newEmail, stripeCustomerId);
-        }
-
-        setSuccess('Email updated successfully');
+        await verifyBeforeUpdateEmail(auth.currentUser, newEmail);
+        setVerificationSent(true);
+        setSuccess('Verification email sent. Please check your inbox and verify the new email address.');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -125,10 +136,10 @@ const ProfilePage: React.FC = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || verificationSent}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? 'Updating...' : 'Update Email'}
+            {loading ? 'Sending verification...' : verificationSent ? 'Verification email sent' : 'Update Email'}
           </button>
         </form>
 
