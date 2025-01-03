@@ -86,7 +86,7 @@ const CarePlan: React.FC = () => {
                     <Utensils className="w-6 h-6 text-green-600" />
                   </div>
                   <div className="ml-4 text-left">
-                    <h3 className="font-semibold text-gray-900">Diet Plan</h3>
+                    <h3 className="font-semibold text-gray-900">Meditation Plan</h3>
                     <p className="text-sm text-gray-600">
                       Get a personalized meditation plan
                     </p>

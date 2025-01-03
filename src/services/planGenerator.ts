@@ -14,7 +14,7 @@ const PLAN_PROMPTS = {
 
 const PLAN_GENERATION_PROMPTS = {
   workout: "You are a certified fitness trainer. Create a detailed workout plan based on the user's goals and answers. Include exercise descriptions, sets, reps, and weekly schedule.",
-  diet: "You are a certified nutritionist. Create a detailed meal plan based on the user's goals and answers. Include meal suggestions, portions, and nutritional guidance.",
+  diet: "You are a certified nutritionist. Create a detailed meal plan based on the user's goals and answers. Include meal suggestions, portions, and nutritional guidance.You can also include a weekly schedule if you deem it necessary",
   meditation: "You are a meditation instructor. Create a structured meditation plan based on the user's goals and answers. Include technique descriptions, session durations, progression path, and daily practice guidance."
 };
 
@@ -23,7 +23,7 @@ export async function generatePlanQuestions(
   goals: string
 ): Promise<string[]> {
   if (!import.meta.env.VITE_OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is not configured");
+    throw new Error("API key is not configured");
   }
 
   try {
@@ -32,8 +32,9 @@ export async function generatePlanQuestions(
         { role: "system", content: PLAN_PROMPTS[type] },
         { role: "user", content: `Generate questions for someone with these goals: ${goals}` },
       ],
-      model: "gpt-3.5-turbo",
+      model: "chatgpt-4o-latest",
       temperature: 0.7,
+      max_tokens: 2500,
     });
 
     return completion.choices[0]?.message?.content
@@ -41,7 +42,7 @@ export async function generatePlanQuestions(
       .filter((q) => q.trim())
       .slice(0, 5) || [];
   } catch (error) {
-    console.error("OpenAI API Error:", error);
+    console.error("API Error:", error);
     throw new Error("Failed to generate questions");
   }
 }
@@ -52,7 +53,7 @@ export async function generatePlan(
   answers: Record<string, string>
 ): Promise<string> {
   if (!import.meta.env.VITE_OPENAI_API_KEY) {
-    throw new Error("OpenAI API key is not configured");
+    throw new Error("API key is not configured");
   }
 
   const questionsAndAnswers = Object.entries(answers)
@@ -68,14 +69,14 @@ export async function generatePlan(
           content: `Create a ${type} plan with the following information:\n\nGoals: ${goals}\n\nUser Information:\n${questionsAndAnswers}`,
         },
       ],
-      model: "gpt-3.5-turbo",
+      model: "chatgpt-4o-latest",
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 2500,
     });
 
     return completion.choices[0]?.message?.content || "Unable to generate plan";
   } catch (error) {
-    console.error("OpenAI API Error:", error);
+    console.error("API Error:", error);
     throw new Error(`Failed to generate ${type} plan`);
   }
 }
