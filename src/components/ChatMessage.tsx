@@ -89,3 +89,5 @@ export const ChatMessage: React.FC<ChatInputProps> = ({
     </form>
   );
 };
+
+export default ChatMessage;
