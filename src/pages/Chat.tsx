@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Message } from "../types";
-import { ChatMessage } from "../components/ChatMessage";
+import ChatMessage from "../components/ChatMessage";
 import { ChatInput } from "../components/ChatInput";
 import { Disclaimer } from "../components/Disclaimer";
 import { ChatLimit } from "../components/ChatLimit";
@@ -24,7 +24,7 @@ function Chat() {
       timestamp: Timestamp.fromDate(new Date()),
     },
   ]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("");  // Initialize with empty string
   const [isLoading, setIsLoading] = useState(false);
   const [remainingMessages, setRemainingMessages] = useState(() =>
     getRemainingMessages(user?.isPro || false, user?.isDeluxe || false)
@@ -32,21 +32,9 @@ function Chat() {
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
-    setRemainingMessages(getRemainingMessages(user?.isPro || false, user?.isDeluxe || false));
-  }, [user?.isPro, user?.isDeluxe]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input || !input.trim() || isLoading) return;  // Added null check
 
     if (!user) {
       setError("Please log in to send messages");
@@ -92,9 +80,7 @@ function Chat() {
       console.error("Error getting AI response:", error);
       const errorMessage: Message = {
         id: messages.length + 2,
-        text:
-          error.message ||
-          "I apologize, but I encountered a technical issue. Please try again later.",
+        text: error.message || "I apologize, but I encountered a technical issue. Please try again later.",
         isBot: true,
         timestamp: Timestamp.fromDate(new Date()),
       };
@@ -129,18 +115,9 @@ function Chat() {
             {isLoading && (
               <div className="flex justify-center py-2">
                 <div className="flex items-center space-x-1.5">
-                  <div
-                    className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
-                    style={{ animationDelay: "0ms" }}
-                  />
-                  <div
-                    className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
-                    style={{ animationDelay: "150ms" }}
-                  />
-                  <div
-                    className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
-                    style={{ animationDelay: "300ms" }}
-                  />
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
               </div>
             )}
