@@ -8,7 +8,7 @@ interface ChatInputProps {
 }
 
 export const ChatInput: React.FC<ChatInputProps> = ({
-  input,
+  input = '',
   setInput,
   handleSubmit,
 }) => {
@@ -26,7 +26,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         const transcript = Array.from(event.results)
           .map(result => result[0].transcript)
           .join('');
-        setInput(transcript);
+        setInput(transcript || '');
       };
 
       recognitionInstance.onerror = (event) => {
@@ -40,7 +40,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
   const toggleListening = () => {
     if (!recognition) return;
-
+    
     if (isListening) {
       recognition.stop();
     } else {
@@ -49,12 +49,18 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     setIsListening(!isListening);
   };
 
+  const handleSubmitWrapper = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input?.trim()) return;
+    handleSubmit(e);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="glass-effect p-3 sm:p-4">
+    <form onSubmit={handleSubmitWrapper} className="glass-effect p-3 sm:p-4">
       <div className="max-w-3xl mx-auto flex space-x-2">
         <input
           type="text"
-          value={input}
+          value={input || ''}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your health question..."
           className="flex-1 px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 
@@ -77,7 +83,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </button>
         <button
           type="submit"
-          disabled={!input.trim()}
+          disabled={!input?.trim()}
           className="px-4 sm:px-6 bg-blue-900 text-white rounded-xl hover:bg-blue-800 
                    transition-colors duration-200 shadow-sm
                    disabled:opacity-50 disabled:cursor-not-allowed
