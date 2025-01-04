@@ -11,14 +11,21 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
 
   const speak = () => {
     if (!window.speechSynthesis) return;
-    
+  
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
     }
-
+  
     const utterance = new SpeechSynthesisUtterance(message.text);
+    
+    // Fetch available voices
+    const voices = window.speechSynthesis.getVoices();
+    
+    // Select a specific voice (Example: change to Google UK English Female)
+    utterance.voice = voices.find(voice => voice.name === "Google UK English Female") || voices[0];
+    
     utterance.onend = () => setIsSpeaking(false);
     window.speechSynthesis.speak(utterance);
     setIsSpeaking(true);
