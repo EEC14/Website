@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Message } from "../types";
 import ChatMessage from "../components/ChatMessage";
-import { ChatInput } from "../components/ChatInput";
+import  ChatInput  from "../components/ChatInput";
 import { Disclaimer } from "../components/Disclaimer";
 import { ChatLimit } from "../components/ChatLimit";
 import { ShareButton } from "../components/ShareButton";

@@ -7,56 +7,44 @@ interface ChatInputProps {
   handleSubmit: (e: React.FormEvent) => void;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({
-  input = '',
+const ChatInput: React.FC<ChatInputProps> = ({
+  input,
   setInput,
   handleSubmit,
 }) => {
   const [isListening, setIsListening] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
-
-  useEffect(() => {
-    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
-      recognitionInstance.continuous = true;
-      recognitionInstance.interimResults = true;
-      
-      recognitionInstance.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map(result => result[0].transcript)
-          .join('');
-        setInput(transcript || '');
-      };
-
-      recognitionInstance.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-
-      setRecognition(recognitionInstance);
-    }
-  }, [setInput]);
 
   const toggleListening = () => {
-    if (!recognition) return;
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) return;
+    
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
     
     if (isListening) {
       recognition.stop();
+      setIsListening(false);
     } else {
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        setInput(transcript);
+      };
       recognition.start();
+      setIsListening(true);
     }
-    setIsListening(!isListening);
   };
 
-  const handleSubmitWrapper = (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input?.trim()) return;
-    handleSubmit(e);
+    const trimmedInput = String(input || '').trim();
+    if (trimmedInput) {
+      handleSubmit(e);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmitWrapper} className="glass-effect p-3 sm:p-4">
+    <form onSubmit={onSubmit} className="glass-effect p-3 sm:p-4">
       <div className="max-w-3xl mx-auto flex space-x-2">
         <input
           type="text"
@@ -83,7 +71,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </button>
         <button
           type="submit"
-          disabled={!input?.trim()}
+          disabled={!String(input || '').trim()}
           className="px-4 sm:px-6 bg-blue-900 text-white rounded-xl hover:bg-blue-800 
                    transition-colors duration-200 shadow-sm
                    disabled:opacity-50 disabled:cursor-not-allowed
@@ -95,3 +83,5 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     </form>
   );
 };
+
+export default ChatInput;
