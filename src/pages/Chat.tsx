@@ -107,11 +107,15 @@ function Chat() {
         <div className="block px-4 py-2 border-b border-gray-200 sm:hidden">
           <Disclaimer />
         </div>
+        
+        {/* Render Messages */}
         <div className="flex-1 overflow-y-auto message-container">
           <div className="p-4 space-y-4 sm:p-6 sm:space-y-6">
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
+            
+            {/* Loading Indicator */}
             {isLoading && (
               <div className="flex justify-center py-2">
                 <div className="flex items-center space-x-1.5">
@@ -124,6 +128,8 @@ function Chat() {
             <div ref={messagesEndRef} />
           </div>
         </div>
+        
+        {/* Single Chat Input Box (Fix applied here) */}
         <div className="border-t border-gray-200">
           <ChatInput
             input={input}
@@ -132,9 +138,10 @@ function Chat() {
           />
         </div>
       </div>
+      
       <ShareButton messages={messages} />
     </main>
-  );
+  );  
 }
 
 export default Chat;
