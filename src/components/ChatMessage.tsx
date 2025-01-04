@@ -1,93 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { Send, Mic, MicOff } from 'lucide-react';
+import React, { useState } from "react";
+import { Stethoscope, User, Volume2, VolumeX } from "lucide-react";
+import { Message } from "../types";
 
-interface ChatInputProps {
-  input: string;
-  setInput: (input: string) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+interface ChatMessageProps {
+  message: Message;
 }
 
-export const ChatMessage: React.FC<ChatInputProps> = ({
-  input,
-  setInput,
-  handleSubmit,
-}) => {
-  const [isListening, setIsListening] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  useEffect(() => {
-    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognitionInstance = new SpeechRecognition();
-      recognitionInstance.continuous = true;
-      recognitionInstance.interimResults = true;
-      
-      recognitionInstance.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map(result => result[0].transcript)
-          .join('');
-        setInput(transcript);
-      };
-
-      recognitionInstance.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-      };
-
-      setRecognition(recognitionInstance);
+  const speak = () => {
+    if (!window.speechSynthesis) return;
+    
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
     }
-  }, [setInput]);
 
-  const toggleListening = () => {
-    if (!recognition) return;
-
-    if (isListening) {
-      recognition.stop();
-    } else {
-      recognition.start();
-    }
-    setIsListening(!isListening);
+    const utterance = new SpeechSynthesisUtterance(message.text);
+    utterance.onend = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-effect p-3 sm:p-4">
-      <div className="max-w-3xl mx-auto flex space-x-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your health question..."
-          className="flex-1 px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 
-                   rounded-xl text-[15px] sm:text-base
-                   text-gray-800 placeholder-gray-400
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        <button
-          type="button"
-          onClick={toggleListening}
-          className={`px-4 rounded-xl transition-colors duration-200 
-                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                    ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+    <div className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}>
+      <div
+        className={`flex items-start space-x-3 max-w-[92%] sm:max-w-[85%] ${
+          message.isBot ? "flex-row" : "flex-row-reverse space-x-reverse"
+        }`}
+      >
+        <div
+          className={`flex-shrink-0 p-2 sm:p-2.5 rounded-xl ${
+            message.isBot
+              ? "bg-blue-100 text-blue-900"
+              : "bg-blue-900 text-white"
+          }`}
         >
-          {isListening ? (
-            <MicOff className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          {message.isBot ? (
+            <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6" />
           ) : (
-            <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+            <User className="w-5 h-5 sm:w-6 sm:h-6" />
           )}
-        </button>
-        <button
-          type="submit"
-          disabled={!String(input || '').trim()}
-          className="px-4 sm:px-6 bg-blue-900 text-white rounded-xl hover:bg-blue-800 
-                  transition-colors duration-200 shadow-sm
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        </div>
+        <div
+          className={`relative p-4 sm:p-5 rounded-2xl shadow-sm ${
+            message.isBot ? "bg-white text-gray-800" : "bg-blue-900 text-white"
+          }`}
         >
-          <Send className="w-5 h-5 sm:w-6 sm:h-6" />
-        </button>
+          <div className="flex justify-between items-start">
+            <p className="text-[15px] sm:text-base leading-relaxed whitespace-pre-wrap">
+              {message.text}
+            </p>
+            <button
+              onClick={speak}
+              className="ml-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {isSpeaking ? (
+                <VolumeX className="w-4 h-4 text-gray-500" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-gray-500" />
+              )}
+            </button>
+          </div>
+          <span
+            className={`block text-[11px] sm:text-xs mt-2 ${
+              message.isBot ? "text-gray-400" : "text-blue-200"
+            }`}
+          >
+            {message.timestamp.toDate().toLocaleDateString()}
+            {" / "}
+            {message.timestamp.toDate().toLocaleTimeString()}
+          </span>
+        </div>
       </div>
-    </form>
+    </div>
   );
 };
-
-export default ChatMessage;
