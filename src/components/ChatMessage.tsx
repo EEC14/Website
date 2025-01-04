@@ -77,11 +77,11 @@ export const ChatMessage: React.FC<ChatInputProps> = ({
         </button>
         <button
           type="submit"
-          disabled={!input.trim()}
+          disabled={!String(input || '').trim()}
           className="px-4 sm:px-6 bg-blue-900 text-white rounded-xl hover:bg-blue-800 
-                   transition-colors duration-200 shadow-sm
-                   disabled:opacity-50 disabled:cursor-not-allowed
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  transition-colors duration-200 shadow-sm
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           <Send className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
