@@ -7,7 +7,7 @@ interface ChatInputProps {
   handleSubmit: (e: React.FormEvent) => void;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({
+export const ChatMessage: React.FC<ChatInputProps> = ({
   input,
   setInput,
   handleSubmit,
