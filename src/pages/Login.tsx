@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { LogIn, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-
+import { sendPasswordResetEmail } from 'firebase/auth';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +26,19 @@ const Login: React.FC = () => {
       setError('Failed to log in. Please check your credentials.');
     } finally {
       setIsLoading(false);
+    }
+  };
+  const sendPasswordReset = async () => {
+    if (!email) {
+      setError('Please enter your email to reset the password.');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetEmailSent(true);
+      setError('');
+    } catch (error: any) {
+      setError('Failed to send reset email. Please check the email address.');
     }
   };
 
@@ -103,6 +116,13 @@ const Login: React.FC = () => {
               Sign up
             </Link>
           </p>
+          <button
+                type="button"
+                onClick={sendPasswordReset}
+                className="w-full text-sm text-blue-600 hover:text-blue-500"
+              >
+                Forgot Password?
+          </button>
         </div>
       </div>
     </main>
