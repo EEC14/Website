@@ -20,6 +20,7 @@ import Footer from "./components/Footer";
 // import ManageBilling from "./pages/payment-dashboard";
 import BetaTesting from "./pages/BetaTest";
 import ProfilePage from "./pages/Profile";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 function App() {
   return (
     <AuthProvider>
