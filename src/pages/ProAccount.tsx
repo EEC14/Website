@@ -107,7 +107,7 @@ const ProAccount: React.FC = () => {
               <span className="text-5xl font-bold text-gray-900">
                 £{currentPlan.price}
               </span>
-              <span className="ml-2 text-gray-600">per month or year depending on the plan</span>
+              <span className="ml-2 text-gray-600">per month/year</span>
             </div>
             <div className="flex flex-col items-center justify-center">
               <h1 className="text-xl font-semibold text-gray-800">
