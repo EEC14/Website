@@ -92,7 +92,7 @@ const ProAccount: React.FC = () => {
               key={plan}
               onClick={() => setSelectedPlan(plan as "Pro" | "Deluxe" | "ProYearly" | "DeluxeYearly")}
               className={`px-4 w-full py-2 font-semibold transition-all rounded-lg ${
-                currentPlan.name === plan
+                selectedPlan === plan
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
