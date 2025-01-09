@@ -42,7 +42,7 @@ function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route
-            path="/beta-test"
+            path="/app"
             element={
               <AuthGuard>
                 <BetaTesting />

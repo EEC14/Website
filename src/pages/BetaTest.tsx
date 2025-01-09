@@ -24,7 +24,7 @@ export const BetaTesting = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 p-8">
       <div className="max-w-2xl text-center mb-12">
-        <h1 className="text-4xl font-bold mb-6 text-gray-800">Download the beta</h1>
+        <h1 className="text-4xl font-bold mb-6 text-gray-800">Download the App</h1>
         <p className="text-xl text-gray-600 mb-8 leading-relaxed">
           Get the app and start your health journey today.
         </p>
@@ -35,7 +35,7 @@ export const BetaTesting = () => {
           text="Android"
         />
         <LinkButton 
-          link="https://testflight.apple.com/join/G7CpHTH2" 
+          link="https://apps.apple.com/us/app/healthchat-mobile/id6739962453" 
           text="iOS"
         />
       </div>
