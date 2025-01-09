@@ -5,7 +5,7 @@ import { Plans } from "../utils/Plans";
 
 const ProAccount: React.FC = () => {
   const { user } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState<"Pro" | "Deluxe">("Pro");
+  const [selectedPlan, setSelectedPlan] = useState<"Pro" | "Deluxe" | "ProYearly" | "DeluxeYearly">("Pro");
 
   const handleManageBilling = async () => {
     try {
@@ -90,7 +90,7 @@ const ProAccount: React.FC = () => {
           {Object.keys(Plans).map((plan) => (
             <button
               key={plan}
-              onClick={() => setSelectedPlan(plan as "Pro" | "Deluxe")}
+              onClick={() => setSelectedPlan(plan as "Pro" | "Deluxe" | "ProYearly" | "DeluxeYearly")}
               className={`px-4 w-full py-2 font-semibold transition-all rounded-lg ${
                 selectedPlan === plan
                   ? "bg-blue-600 text-white"
