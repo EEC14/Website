@@ -25,7 +25,7 @@ export const Plans = {
     link: "https://buy.stripe.com/14k8wSctY6vwbgk3cg",
     priceId: "price_1QfKhvGuEHc4ZQvQQJ9GVK8Q", // Replace with your actual Stripe Price ID
     name: "Pro - Yearly",
-    price: 30,
+    price: 300,
     features: [
       "Unlimited chatbot access",
       "Daily health tips",
@@ -36,7 +36,7 @@ export const Plans = {
     priceId:
       "price_1QfKiFGuEHc4ZQvQCfFAmkdn", // Replace with your actual Stripe Price ID
     name: "Deluxe - Yearly",
-    price: 45,
+    price: 450,
     features: [
       "All Pro features",
       "Workout plans generator",

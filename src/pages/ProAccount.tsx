@@ -107,11 +107,11 @@ const ProAccount: React.FC = () => {
               <span className="text-5xl font-bold text-gray-900">
                 £{currentPlan.price}
               </span>
-              <span className="ml-2 text-gray-600">/month</span>
+              <span className="ml-2 text-gray-600">per month or year depending on the plan</span>
             </div>
             <div className="flex flex-col items-center justify-center">
               <h1 className="text-xl font-semibold text-gray-800">
-                Upgrade to {selectedPlan}
+                Upgrade to {currentPlan.name}
               </h1>
               <p className="text-center text-gray-600">
                 Unlock {selectedPlan} benefits to take your health journey to
