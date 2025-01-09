@@ -92,7 +92,7 @@ const ProAccount: React.FC = () => {
               key={plan}
               onClick={() => setSelectedPlan(plan as "Pro" | "Deluxe" | "ProYearly" | "DeluxeYearly")}
               className={`px-4 w-full py-2 font-semibold transition-all rounded-lg ${
-                selectedPlan === plan
+                currentPlan.name === plan
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-800 hover:bg-gray-300"
               }`}
@@ -114,7 +114,7 @@ const ProAccount: React.FC = () => {
                 Upgrade to {currentPlan.name}
               </h1>
               <p className="text-center text-gray-600">
-                Unlock {selectedPlan} benefits to take your health journey to
+                Unlock {currentPlan.name} benefits to take your health journey to
                 the next level.
               </p>
             </div>
