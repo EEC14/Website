@@ -2,11 +2,15 @@ import OpenAI from "openai";
 import { UserProfile } from "../services/firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
 import { MedicalSpecialist, SpecializationType } from "../types";
-import { getFirestore, where, query, collection, orderBy, getDocs } from "firebase/firestore";
+import { getFirestore, where, query, collection, getDocs } from "firebase/firestore";
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
 });
+
+interface MedicalSpecialistWithRank extends MedicalSpecialist {
+  weightedRank: number;
+}
 
 const SYSTEM_PROMPT = `You are HealthChat, a specialized AI health assistant focused exclusively on health and healthcare-related topics. 
 
@@ -51,21 +55,35 @@ function selectOpenAIModel(user: UserProfile | null): string {
   return DEFAULT_MODEL;
 }
 
-async function getRankedSpecialists(specialization: SpecializationType): Promise<MedicalSpecialist[]> {
+async function findSpecialists(
+  specialization: SpecializationType,
+  limit: number = 3
+): Promise<MedicalSpecialist[]> {
   const db = getFirestore();
   const specialistsRef = collection(db, 'specialists');
   
   const q = query(
     specialistsRef,
-    where('specialization', '==', specialization),
-    orderBy('paymentAmount', 'desc')
+    where('specialization', '==', specialization)
   );
 
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({
+  const specialists = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   } as MedicalSpecialist));
+
+  // Calculate weighted rank based on payment
+  const specialistsWithRank: MedicalSpecialistWithRank[] = specialists
+    .map(specialist => ({
+      ...specialist,
+      weightedRank: specialist.paymentAmount // Higher payment = better rank
+    }))
+    .sort((a, b) => b.weightedRank - a.weightedRank)
+    .slice(0, limit);
+
+  // Remove weightedRank before returning
+  return specialistsWithRank.map(({ weightedRank, ...rest }) => rest);
 }
 
 export async function getAIResponse(userMessage: string, user: UserProfile): Promise<string> {
@@ -94,20 +112,22 @@ export async function getAIResponse(userMessage: string, user: UserProfile): Pro
     const specialistMatch = response.match(/\[FIND_SPECIALIST\](.*)/);
     if (specialistMatch) {
       const specialization = specialistMatch[1] as SpecializationType;
-      const specialists = await getRankedSpecialists(specialization);
+      const specialists = await findSpecialists(specialization);
       
       // Remove the specialist tag
       response = response.replace(/\[FIND_SPECIALIST\].*/, '');
       
-      // Add promoted specialists to the response
+      // Add specialists to the response
       if (specialists.length > 0) {
-        response += "\n\nRecommended Specialists:\n";
-        specialists.forEach((specialist, index) => {
-          response += `\n${index + 1}. ${specialist.name}
-          Specialization: ${specialist.specialization}
-          Address: ${specialist.address}
-          Phone: ${specialist.phone}`;
-        });
+        response += "\n\nRecommended Specialists:\n\n" +
+          specialists.map((s, i) => 
+            `${i + 1}. ${s.name}\n` +
+            `   Specialization: ${s.specialization}\n` +
+            `   Address: ${s.address}\n` +
+            `   Phone: ${s.phone}`
+          ).join('\n\n');
+      } else {
+        response += "\n\nNo specialists found for your needs.";
       }
     }
 
