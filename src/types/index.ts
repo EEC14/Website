@@ -16,3 +16,26 @@ export type Chat = {
   messages: Message[];
   createdAt: Timestamp;
 };
+
+export interface MedicalSpecialist {
+  id: string;
+  name: string;
+  specialization: SpecializationType;
+  address: string;
+  phone: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  paymentAmount: number; // Amount paid, 0 for non-paying
+  paymentDate: Date;    // When payment was made
+}
+
+export enum SpecializationType {
+  ORTHOPEDIC = 'orthopedic',
+  PHYSIOTHERAPY = 'physiotherapy',
+  GENERAL = 'general',
+  PSYCHOLOGY = 'psychology',
+  CARDIOLOGY = 'cardiology',
+  DERMATOLOGY = 'dermatology'
+};

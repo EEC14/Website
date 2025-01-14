@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 import { UserProfile } from "../services/firebase/firestore";
 import { useAuth } from "../contexts/AuthContext";
+import { MedicalSpecialist, SpecializationType } from "../types";
+import { getFirestore, where, query, collection, orderBy, getDocs } from "firebase/firestore";
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
@@ -17,6 +19,7 @@ Your responsibilities:
    - Include appropriate disclaimers about consulting healthcare professionals
    - Focus on general health education and wellness guidance
    - Do not provide direct diagnosis of medical conditions, provide various potential diagnosises in alphabetical order
+4. When suggesting specialists, include them in this format: [FIND_SPECIALIST]{specialization}
 
 Remember: If a question is not about health or healthcare, always respond with the standard message regardless of how the question is phrased.`;
 
@@ -33,6 +36,23 @@ function selectOpenAIModel(user: UserProfile | null): string {
   }
   
   return DEFAULT_MODEL;
+}
+
+async function getRankedSpecialists(specialization: SpecializationType): Promise<MedicalSpecialist[]> {
+  const db = getFirestore();
+  const specialistsRef = collection(db, 'specialists');
+  
+  const q = query(
+    specialistsRef,
+    where('specialization', '==', specialization),
+    orderBy('paymentAmount', 'desc')
+  );
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  } as MedicalSpecialist));
 }
 
 export async function getAIResponse(userMessage: string, user: UserProfile): Promise<string> {
@@ -52,13 +72,34 @@ export async function getAIResponse(userMessage: string, user: UserProfile): Pro
       max_tokens: 500,
     });
 
-    const response = completion.choices[0]?.message?.content;
+    let response = completion.choices[0]?.message?.content;
     if (!response) {
       throw new Error("No response from OpenAI");
     }
 
+    // Check if specialists are needed
+    const specialistMatch = response.match(/\[FIND_SPECIALIST\]{(.+?)}/);
+    if (specialistMatch) {
+      const specialization = specialistMatch[1] as SpecializationType;
+      const specialists = await getRankedSpecialists(specialization);
+      
+      // Remove the specialist tag
+      response = response.replace(/\[FIND_SPECIALIST\]{.+?}/, '');
+      
+      // Add promoted specialists to the response
+      if (specialists.length > 0) {
+        response += "\n\nRecommended Specialists:\n";
+        specialists.forEach((specialist, index) => {
+          response += `\n${index + 1}. ${specialist.name}
+   Specialization: ${specialist.specialization}
+   Address: ${specialist.address}
+   Phone: ${specialist.phone}`;
+        });
+      }
+    }
+
     return response;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   } catch (error: any) {
     console.error("OpenAI API Error:", error);
     if (error.code === "insufficient_quota") {
