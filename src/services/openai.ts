@@ -91,22 +91,22 @@ export async function getAIResponse(userMessage: string, user: UserProfile): Pro
     }
 
     // Check if specialists are needed
-    const specialistMatch = response.match(/\[FIND_SPECIALIST\]{(.+?)}/);
+    const specialistMatch = response.match(/\[FIND_SPECIALIST\](.*)/);
     if (specialistMatch) {
       const specialization = specialistMatch[1] as SpecializationType;
       const specialists = await getRankedSpecialists(specialization);
       
       // Remove the specialist tag
-      response = response.replace(/\[FIND_SPECIALIST\]{.+?}/, '');
+      response = response.replace(/\[FIND_SPECIALIST\].*/, '');
       
       // Add promoted specialists to the response
       if (specialists.length > 0) {
         response += "\n\nRecommended Specialists:\n";
         specialists.forEach((specialist, index) => {
           response += `\n${index + 1}. ${specialist.name}
-   Specialization: ${specialist.specialization}
-   Address: ${specialist.address}
-   Phone: ${specialist.phone}`;
+          Specialization: ${specialist.specialization}
+          Address: ${specialist.address}
+          Phone: ${specialist.phone}`;
         });
       }
     }
