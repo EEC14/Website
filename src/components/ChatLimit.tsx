@@ -13,14 +13,14 @@ export const ChatLimit: React.FC<ChatLimitProps> = ({ remainingMessages }) => (
       <div className="flex-1">
         <p className="text-xs sm:text-sm text-blue-800">
           <span className="font-medium">Free Plan Limit:</span>
-          {' '}{remainingMessages} messages remaining today
+          {' '}{remainingMessages} messages remaining this month
         </p>
         <Link
           to="/pro"
           className="inline-flex items-center space-x-1.5 sm:space-x-2 mt-1.5 sm:mt-2 text-xs sm:text-sm font-medium text-blue-700 hover:text-blue-800"
         >
           <Crown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span>Upgrade to Pro for unlimited messages</span>
+          <span>Upgrade to Pro or Deluxe for unlimited messages</span>
         </Link>
       </div>
     </div>

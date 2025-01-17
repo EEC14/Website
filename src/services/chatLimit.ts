@@ -1,43 +1,43 @@
-const DAILY_CHAT_LIMIT = 20;
-const STORAGE_KEY = 'healthchat_daily_messages';
+const MONTHLY_CHAT_LIMIT = 5; // Adjust the limit as needed
+const STORAGE_KEY = 'healthchat_monthly_messages';
 
-interface DailyMessages {
+interface MonthlyMessages {
   count: number;
-  date: string;
+  month: string;
 }
 
 export function getRemainingMessages(isPro: boolean, isDeluxe: boolean): number {
   if (isPro || isDeluxe) return Infinity;
-  const daily = getDailyMessages();
-  return Math.max(0, DAILY_CHAT_LIMIT - daily.count);
+  const monthly = getMonthlyMessages();
+  return Math.max(0, MONTHLY_CHAT_LIMIT - monthly.count);
 }
 
 export function incrementMessageCount(isPro: boolean, isDeluxe: boolean): void {
   if (isPro || isDeluxe) return;
-  const daily = getDailyMessages();
-  daily.count += 1;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(daily));
+  const monthly = getMonthlyMessages();
+  monthly.count += 1;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(monthly));
 }
 
 export function hasReachedLimit(isPro: boolean, isDeluxe: boolean): boolean {
   if (isPro || isDeluxe) return false;
-  const daily = getDailyMessages();
-  return daily.count >= DAILY_CHAT_LIMIT;
+  const monthly = getMonthlyMessages();
+  return monthly.count >= MONTHLY_CHAT_LIMIT;
 }
 
-function getDailyMessages(): DailyMessages {
-  const today = new Date().toDateString();
+function getMonthlyMessages(): MonthlyMessages {
+  const currentMonth = new Date().toISOString().slice(0, 7); // Format: YYYY-MM
   const stored = localStorage.getItem(STORAGE_KEY);
   
   if (!stored) {
-    return { count: 0, date: today };
+    return { count: 0, month: currentMonth };
   }
 
-  const daily: DailyMessages = JSON.parse(stored);
+  const monthly: MonthlyMessages = JSON.parse(stored);
   
-  if (daily.date !== today) {
-    return { count: 0, date: today };
+  if (monthly.month !== currentMonth) {
+    return { count: 0, month: currentMonth };
   }
 
-  return daily;
+  return monthly;
 }
